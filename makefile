@@ -9,5 +9,5 @@ webbie-davvie: main.go
 	go build -o webbie-davvie main.go
 
 .PHONY: run
-run: build
+run: webbie-davvie
 	./webbie-davvie
