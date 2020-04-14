@@ -1,5 +1,5 @@
 module github.com/aude/webbie-davvie
 
-go 1.12
+go 1.14
 
-require golang.org/x/net v0.0.0-20190522155817-f3200d17e092 // indirect
+require golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e
