@@ -1,41 +1,41 @@
 package main
 
 import (
-    "os"
-    "fmt"
+	"fmt"
+	"os"
 )
 
 type Config struct {
-    Port string
-    Dir  string
+	Port string
+	Dir  string
 }
 
 func NewConfig() (*Config, error) {
-    config := new(Config)
+	config := new(Config)
 
-    envConfig, err := parseEnv()
-    if err != nil {
-        return envConfig, fmt.Errorf("could not parse env variables: %s", err)
-    }
+	envConfig, err := parseEnv()
+	if err != nil {
+		return envConfig, fmt.Errorf("could not parse env variables: %s", err)
+	}
 
-    config = envConfig
+	config = envConfig
 
-    return config, nil
+	return config, nil
 }
 
 func parseEnv() (*Config, error) {
-    config := new(Config)
-    var value   string
-    var success bool
+	config := new(Config)
+	var value string
+	var success bool
 
-    if value, success = os.LookupEnv("PORT"); !success {
-        return config, fmt.Errorf("%s is not set", "PORT")
-    }
-    config.Port = value
-    if value, success = os.LookupEnv("DIR"); !success {
-        return config, fmt.Errorf("%s is not set", "DIR")
-    }
-    config.Dir = value
+	if value, success = os.LookupEnv("PORT"); !success {
+		return config, fmt.Errorf("%s is not set", "PORT")
+	}
+	config.Port = value
+	if value, success = os.LookupEnv("DIR"); !success {
+		return config, fmt.Errorf("%s is not set", "DIR")
+	}
+	config.Dir = value
 
-    return config, nil
+	return config, nil
 }
