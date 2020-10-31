@@ -15,12 +15,12 @@ func (config *Config) validate() error {
 	// Port
 	validPort := regexp.MustCompile(`^[0-9]+$`)
 	if !validPort.MatchString(config.Port) {
-		return fmt.Errorf("configured port is not valid: %v", config.Port)
+		return fmt.Errorf("configured port \"%s\" is not valid", config.Port)
 	}
 
 	// Dir
 	if stat, err := os.Stat(config.Dir); err != nil || !stat.IsDir() {
-		return fmt.Errorf("configured dir is not valid: %v", config.Dir)
+		return fmt.Errorf("configured dir \"%s\" is not valid", config.Dir)
 	}
 
 	return nil
