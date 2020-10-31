@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"golang.org/x/net/webdav"
 )
@@ -10,7 +12,10 @@ import (
 func main() {
 	config, err := NewConfig()
 	if err != nil {
-		log.Fatal(err)
+		fmt.Fprintf(os.Stderr, "ERROR: %v\n", err)
+		fmt.Fprintln(os.Stderr, "")
+		fmt.Fprintln(os.Stderr, usage())
+		os.Exit(1)
 	}
 
 	handler := &webdav.Handler{
@@ -18,7 +23,7 @@ func main() {
 		LockSystem: webdav.NewMemLS(),
 		Logger: func(request *http.Request, err error) {
 			if err != nil {
-				log.Printf("[%s]: %s, ERROR: %s\n",
+				log.Printf("[%s]: %s, ERROR: %v\n",
 					request.Method,
 					request.URL,
 					err)
