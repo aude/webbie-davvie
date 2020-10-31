@@ -1,6 +1,12 @@
 webbie-davvie
 =============
 
+webbie-davvie is a simple WebDAV server written in Go.
+It does one thing and does it well.
+
+Usage
+-----
+
 	usage:
 	
 		./webbie-davvie
@@ -10,6 +16,3 @@ webbie-davvie
 		PORT	port to serve at
 		DIR	directory to serve
 	
-
-webbie-davvie is a simple WebDAV server written in Go.
-It will do one thing and do one thing well.
