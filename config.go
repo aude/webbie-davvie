@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"regexp"
 )
 
 type Config struct {
@@ -10,32 +11,58 @@ type Config struct {
 	Dir  string
 }
 
+func (config *Config) validate() error {
+	// Port
+	validPort := regexp.MustCompile(`^[0-9]+$`)
+	if !validPort.MatchString(config.Port) {
+		return fmt.Errorf("configured port is not valid: %v", config.Port)
+	}
+
+	// Dir
+	if stat, err := os.Stat(config.Dir); err != nil || !stat.IsDir() {
+		return fmt.Errorf("configured dir is not valid: %v", config.Dir)
+	}
+
+	return nil
+}
+
 func NewConfig() (*Config, error) {
 	config := new(Config)
 
-	envConfig, err := parseEnv()
-	if err != nil {
-		return envConfig, fmt.Errorf("could not parse env variables: %s", err)
-	}
+	// take config from multiple sources
+	//
+	// priority, from least to most:
+	//
+	// - config file (not implemented)
+	// - environment variable
+	// - command line switch (not implemented)
 
-	config = envConfig
+	envConfig := NewConfigFromEnv()
+	config.apply(envConfig)
+
+	// always validate config
+	if err := config.validate(); err != nil {
+		return config, err
+	}
 
 	return config, nil
 }
 
-func parseEnv() (*Config, error) {
+func (config *Config) apply(add *Config) {
+	if add.Port != "" {
+		config.Port = add.Port
+	}
+	if add.Dir != "" {
+		config.Dir = add.Dir
+	}
+}
+
+// create Config from environment variables
+func NewConfigFromEnv() *Config {
 	config := new(Config)
-	var value string
-	var success bool
 
-	if value, success = os.LookupEnv("PORT"); !success {
-		return config, fmt.Errorf("%s is not set", "PORT")
-	}
-	config.Port = value
-	if value, success = os.LookupEnv("DIR"); !success {
-		return config, fmt.Errorf("%s is not set", "DIR")
-	}
-	config.Dir = value
+	config.Port = os.Getenv("PORT")
+	config.Dir = os.Getenv("DIR")
 
-	return config, nil
+	return config
 }
